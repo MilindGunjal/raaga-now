@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="home">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -96,6 +96,31 @@ h2{font-family:var(--disp);font-weight:400;font-size:28px;margin:6px 0 10px}
 .tab .td{font-family:var(--disp);font-size:12px;opacity:.85}
 .tab.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent)}
 .tab:focus-visible{outline:3px solid var(--fg);outline-offset:-3px}
+/* Home fits one screen, no scroll */
+:root{--tabh:70px}
+html.home{height:100dvh;overflow:hidden}
+html.home body{height:100%;min-height:0;padding:8px 18px calc(var(--tabh) + 6px)}
+#tab-home{flex:1;min-height:0;width:100%}
+#tab-home header h1{font-size:36px;margin:0}
+#tab-home header .tag{margin:0 0 8px;font-size:14px}
+#tab-home #filter{margin-bottom:12px}
+#tab-home .arch{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;padding:24px 14px 12px;margin:6px auto 0}
+#pico svg{width:28px;height:28px}
+#pdeva{font-size:26px;margin-top:2px}
+#pen{font-size:16px}
+#ptime{font-size:13px}
+.rwrap{flex:1 1 0;min-height:0;width:100%;container-type:size;display:flex;align-items:center;justify-content:center}
+.ring{flex:none;width:auto;max-width:none;margin:0;height:min(100cqh,100cqw,272px)}
+#play{width:55%;height:auto;aspect-ratio:1}
+#play .pl{font-size:clamp(20px,11cqh,34px)}
+#play .ps{font-size:clamp(13px,6cqh,16px)}
+#info{flex:none;height:88px;margin-top:4px;width:100%;overflow:hidden}
+#raga{font-size:22px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sub,.hint{font-size:13px;margin:0 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.hint{padding-top:34px}
+#open{padding:4px 16px;font-size:13px}
+.orn{margin:12px 0 10px}
+@media (max-height:640px){header .tag,.orn{display:none}}
 </style>
 </head>
 <body>
@@ -116,12 +141,12 @@ h2{font-family:var(--disp);font-weight:400;font-size:28px;margin:6px 0 10px}
  <div id="pdeva"></div>
  <div id="pen"></div>
  <div id="ptime"></div>
- <div class="ring">
-  <svg class="spin" viewBox="-100 -100 200 200" aria-hidden="true"><use href="#ring12"/></svg>
-  <svg class="spin rev" viewBox="-100 -100 200 200" aria-hidden="true"><g transform="rotate(15) scale(.72)"><use href="#ring12"/></g></svg>
+ <div class="rwrap"><div class="ring">
+  <svg viewBox="-100 -100 200 200" aria-hidden="true"><g><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="140s" repeatCount="indefinite"/><use href="#ring12"/></g></svg>
+  <svg viewBox="-100 -100 200 200" aria-hidden="true"><g transform="rotate(15) scale(.72)"><g><animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="200s" repeatCount="indefinite"/><use href="#ring12"/></g></g></svg>
   <button id="play" type="button"><span class="pl">Play</span><span class="ps">सुनें</span></button>
- </div>
- <div id="info"></div>
+ </div></div>
+ <div id="info"><p class="hint">Tap Play for a raaga that suits this hour</p></div>
 </section>
 <div class="orn" aria-hidden="true"><span>सा रे ग म प ध नि सां</span></div>
 </div>
@@ -382,8 +407,11 @@ function renderSongs(){
 
 // ----- Pop-up (stays until you tap; Continue unlocks after a short countdown) -----
 var timer=null;
-function closePop(){if(timer){clearInterval(timer);timer=null;}$("ov").className="ov";}
+var calm=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
+function pauseRings(p){var r=document.querySelectorAll(".ring svg");for(var i=0;i<r.length;i++){try{if(p||calm)r[i].pauseAnimations();else r[i].unpauseAnimations();}catch(e){}}}
+function closePop(){pauseRings(false);if(timer){clearInterval(timer);timer=null;}$("ov").className="ov";}
 function showPop(text,detail,url){
+  pauseRings(true);
   if(timer){clearInterval(timer);timer=null;}
   $("poptext").textContent=text;$("popdetail").textContent=detail||"";
   var go=$("pgo"),left=4;go.href=url;
@@ -448,11 +476,13 @@ function applyTheme(){
 }
 applyTheme();
 setInterval(function(){var o=shownP;applyTheme();if(o!==shownP&&!editMode)renderRows();},60000);
+pauseRings(false);
 var TABS=["home","songs","raagas"];
 function showTab(t){
   TABS.forEach(function(n){$("tab-"+n).hidden=(n!==t);});
   var bs=document.querySelectorAll(".tab");
   for(var i=0;i<bs.length;i++){bs[i].className="tab"+(bs[i].getAttribute("data-tab")===t?" on":"");}
+  document.documentElement.classList.toggle("home",t==="home");
   window.scrollTo(0,0);
 }
 (function(){var bs=document.querySelectorAll(".tab");for(var i=0;i<bs.length;i++){bs[i].onclick=function(){showTab(this.getAttribute("data-tab"));};}})();
