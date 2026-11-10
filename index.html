@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Raaga Now</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap">
+<style>
+:root{--bg1:#ffe9c2;--bg2:#ffc79b;--fg:#4a1f12;--muted:#7d4a36;--accent:#a8301a;--accent-fg:#fff6ea;--card:rgba(255,255,255,.42);--line:rgba(74,31,18,.22);--gold:#9a6512;--dlg:#fff6e6;--disp:"Tiro Devanagari Hindi",Georgia,"Times New Roman",serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-p="1"]{--bg1:#fff2cc;--bg2:#ffdf94;--fg:#3f2808;--muted:#76501c;--accent:#96281a;--gold:#8a5d0c;--dlg:#fffaf0}
+:root[data-p="2"]{--bg1:#fffdf2;--bg2:#f7ecb0;--fg:#2f2a10;--muted:#6a5f2b;--accent:#0b6670;--accent-fg:#ffffff;--card:rgba(255,255,255,.55);--line:rgba(47,42,16,.2);--gold:#86690f;--dlg:#fffef6}
+:root[data-p="3"]{--bg1:#ffd7a1;--bg2:#f19a62;--fg:#3b160a;--muted:#6e3520;--accent:#7c1f3f;--accent-fg:#fff3e6;--gold:#7d4a0a;--dlg:#fff0dc}
+:root[data-p="4"]{color-scheme:dark;--bg1:#3b1e5e;--bg2:#b8476b;--fg:#fff0df;--muted:#f0cdc6;--accent:#ffc65c;--accent-fg:#3a1a2a;--card:rgba(255,255,255,.12);--line:rgba(255,240,223,.28);--gold:#ffd27a;--dlg:#3a2050}
+:root[data-p="5"]{color-scheme:dark;--bg1:#14153a;--bg2:#2f2d73;--fg:#f4ecd9;--muted:#bdb7d6;--accent:#ffc65c;--accent-fg:#1d1840;--card:rgba(255,255,255,.09);--line:rgba(244,236,217,.24);--gold:#f0c46a;--dlg:#1e1f52}
+:root[data-p="6"]{color-scheme:dark;--bg1:#090c22;--bg2:#18214d;--fg:#eee8d6;--muted:#a9b0cf;--accent:#f3c26b;--accent-fg:#14183a;--card:rgba(255,255,255,.07);--line:rgba(238,232,214,.22);--gold:#e6b95c;--dlg:#12183f}
+:root[data-p="7"]{color-scheme:dark;--bg1:#262857;--bg2:#8d6b9c;--fg:#fbefe0;--muted:#e2cfe0;--accent:#ffb86b;--accent-fg:#2a2150;--card:rgba(255,255,255,.11);--line:rgba(251,239,224,.26);--gold:#ffd08a;--dlg:#2c2a5e}
+html{min-height:100%;background:var(--bg2) linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--fg)}
+body{margin:0;min-height:100vh;font-family:"Hind",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.5;display:flex;flex-direction:column;align-items:center;text-align:center;padding:18px 18px 110px;box-sizing:border-box}
+header h1{font-family:var(--disp);font-weight:400;font-size:46px;line-height:1.1;margin:4px 0 2px}
+header .tag{font-family:var(--disp);font-style:italic;color:var(--muted);margin:0 0 16px;font-size:16px}
+#filter{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-bottom:22px;max-width:380px}
+.chip{border:1px solid var(--gold);background:transparent;color:var(--fg);font:500 15px "Hind",system-ui,sans-serif;padding:7px 16px;border-radius:999px;cursor:pointer}
+.chip.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+#finst{width:auto;padding:7px 10px;font-size:15px}
+.arch{position:relative;width:min(330px,calc(100% - 20px));margin:8px auto 0;padding:40px 16px 26px;border:1.5px solid var(--gold);border-radius:170px 170px 24px 24px;background:var(--card);outline:1px solid var(--line);outline-offset:6px}
+#pico svg{width:34px;height:34px;stroke:var(--gold);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#pdeva{font-family:var(--disp);font-size:30px;line-height:1.2;margin-top:4px}
+#pen{font-size:17px;font-weight:500}
+#ptime{color:var(--muted);font-size:14px}
+.ring{position:relative;width:272px;max-width:100%;aspect-ratio:1;margin:12px auto 0}
+.ring svg{position:absolute;inset:0;width:100%;height:100%;color:var(--gold)}
+.spin{animation:spin 140s linear infinite}
+.spin.rev{animation-direction:reverse;animation-duration:200s}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+#play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:50%;border:none;background:var(--accent);color:var(--accent-fg);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;box-shadow:0 0 0 5px var(--dlg),0 0 0 6.5px var(--gold),0 14px 30px rgba(0,0,0,.28)}
+#play:active{transform:translate(-50%,-50%) scale(.96)}
+#play:focus-visible,.chip:focus-visible,summary:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
+#play .pl{font-family:var(--disp);font-size:34px;line-height:1.1}
+#play .ps{font-family:var(--disp);font-size:16px;opacity:.85}
+#info{margin-top:16px;min-height:24px}
+#raga{font-family:var(--disp);font-size:26px;line-height:1.2;margin:0 0 4px}
+#sub{color:var(--muted);margin:0 0 12px;font-size:15px}
+#open{display:inline-block;color:var(--accent);border:1px solid var(--accent);padding:9px 20px;border-radius:999px;text-decoration:none;font-weight:500}
+.orn{display:flex;align-items:center;gap:12px;width:min(340px,100%);margin:28px 0 10px;color:var(--gold)}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:currentColor;opacity:.6}
+.orn span{font-family:var(--disp);color:var(--muted);letter-spacing:.18em;font-size:15px;white-space:nowrap}
+details{margin-top:6px;width:min(380px,100%);text-align:left;border-top:1px solid var(--line)}
+summary{display:flex;justify-content:space-between;align-items:center;list-style:none;cursor:pointer;font-family:var(--disp);font-size:20px;padding:14px 4px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";width:8px;height:8px;border:1.5px solid var(--gold);transform:rotate(45deg)}
+details[open]>summary::after{background:var(--gold)}
+#addbox{border-top:none;margin-top:0}
+#addsum,.tog{border:1px solid var(--gold);background:transparent;color:var(--fg);font:500 15px "Hind",system-ui,sans-serif;padding:8px 22px;border-radius:999px;cursor:pointer}
+#addsum{display:block;width:fit-content;margin:6px auto 0}
+#addsum::after{display:none}
+.tog.on,details[open]>#addsum{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.p{border-top:1px solid var(--line);padding:12px 0}
+.p b{display:block;font-family:var(--disp);font-weight:400;font-size:18px}
+.p span{color:var(--muted);font-size:14px}.p.now b{color:var(--accent)}
+.form{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+label.l{font-size:13px;color:var(--muted);margin-bottom:-6px}
+input,select{font:16px "Hind",system-ui,sans-serif;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);width:100%;box-sizing:border-box}
+.add{border:none;background:var(--accent);color:var(--accent-fg);font:600 16px "Hind",system-ui,sans-serif;padding:12px;border-radius:999px;cursor:pointer}
+.ghost,.rreset{background:none;border:1px solid var(--line);color:var(--fg);font:15px "Hind",system-ui,sans-serif;padding:10px;border-radius:999px;cursor:pointer}
+.msg{color:var(--muted);font-size:14px;min-height:18px}
+.song{border-top:1px solid var(--line);padding:12px 0;display:flex;flex-direction:column;gap:6px}
+.song .t{font-family:var(--disp);font-size:18px;word-break:break-word}
+.song .m{color:var(--muted);font-size:13px}
+.song .r{display:flex;gap:8px}
+.song .r select{width:auto;flex:1}
+.song .r button,.rr button,.ra button{background:none;border:1px solid var(--line);color:var(--fg);border-radius:999px;padding:6px 14px;font:14px "Hind",system-ui,sans-serif;cursor:pointer}
+.rr{display:flex;gap:6px;align-items:center;padding:6px 0}
+.rr .n{flex:1;font-size:16px;word-break:break-word}
+.rr select{width:auto;font-size:14px;padding:6px}
+.ra{display:flex;gap:6px;padding:6px 0 4px}
+.ra input{font-size:15px;padding:8px}
+.ra button{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.rreset{margin-top:14px;width:100%}
+.ov{position:fixed;inset:0;background:rgba(10,6,20,.6);display:none;align-items:center;justify-content:center;padding:24px;z-index:20}
+.ov.show{display:flex}
+.dlg{background:var(--dlg);color:var(--fg);border:1.5px solid var(--gold);border-radius:160px 160px 22px 22px;outline:1px solid var(--line);outline-offset:5px;padding:44px 26px 22px;max-width:320px;width:100%;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,.45)}
+.dlgicon{display:block;width:46px;height:46px;margin:0 auto 8px;color:var(--gold)}
+.dlg p{font-family:var(--disp);font-size:21px;margin:0 0 10px;line-height:1.35}
+.dlg .d{font-size:15px;color:var(--muted);margin-bottom:20px}
+.dlg a.go{display:block;background:var(--accent);color:var(--accent-fg);padding:13px;border-radius:999px;text-decoration:none;font-weight:600;margin-bottom:10px}
+.dlg button{background:none;border:none;color:var(--muted);font:16px "Hind",system-ui,sans-serif;cursor:pointer;padding:6px}
+.panel{display:flex;flex-direction:column;align-items:center;width:100%}
+.panel[hidden]{display:none}
+h2{font-family:var(--disp);font-weight:400;font-size:28px;margin:6px 0 10px}
+#songs,#rows{width:min(380px,100%);text-align:left}
+#addbox{width:min(380px,100%)}
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;background:var(--dlg);border-top:1px solid var(--gold);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tab{flex:1;background:none;border:none;color:var(--muted);padding:9px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;font:500 13px "Hind",system-ui,sans-serif;box-shadow:inset 0 3px 0 transparent}
+.tab svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tab .td{font-family:var(--disp);font-size:12px;opacity:.85}
+.tab.on{color:var(--accent);box-shadow:inset 0 3px 0 var(--accent)}
+.tab:focus-visible{outline:3px solid var(--fg);outline-offset:-3px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<path id="pt" d="M0 -96C20 -72 20 -44 0 -26C-20 -44 -20 -72 0 -96Z" fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="1.3"/>
+<g id="ring12"><use href="#pt"/><use href="#pt" transform="rotate(30)"/><use href="#pt" transform="rotate(60)"/><use href="#pt" transform="rotate(90)"/><use href="#pt" transform="rotate(120)"/><use href="#pt" transform="rotate(150)"/><use href="#pt" transform="rotate(180)"/><use href="#pt" transform="rotate(210)"/><use href="#pt" transform="rotate(240)"/><use href="#pt" transform="rotate(270)"/><use href="#pt" transform="rotate(300)"/><use href="#pt" transform="rotate(330)"/></g>
+</defs></svg>
+<div class="panel" id="tab-home">
+<header><h1>राग समय</h1><p class="tag">The raaga for this hour</p></header>
+<div id="filter">
+ <button class="chip" type="button" data-t="All">All</button>
+ <button class="chip" type="button" data-t="Vocal">Vocal</button>
+ <button class="chip" type="button" data-t="Instrumental">Instrumental</button>
+ <select id="finst"></select>
+</div>
+<section class="arch">
+ <div id="pico"></div>
+ <div id="pdeva"></div>
+ <div id="pen"></div>
+ <div id="ptime"></div>
+ <div class="ring">
+  <svg class="spin" viewBox="-100 -100 200 200" aria-hidden="true"><use href="#ring12"/></svg>
+  <svg class="spin rev" viewBox="-100 -100 200 200" aria-hidden="true"><g transform="rotate(15) scale(.72)"><use href="#ring12"/></g></svg>
+  <button id="play" type="button"><span class="pl">Play</span><span class="ps">सुनें</span></button>
+ </div>
+ <div id="info"></div>
+</section>
+<div class="orn" aria-hidden="true"><span>सा रे ग म प ध नि सां</span></div>
+</div>
+<div class="ov" id="ov"><div class="dlg"><svg class="dlgicon" viewBox="-100 -100 200 200" aria-hidden="true"><use href="#ring12"/></svg><p id="poptext"></p><div class="d" id="popdetail"></div><a class="go" id="pgo" href="#" target="_blank" rel="noopener">Open song</a><button type="button" id="pno">Cancel</button></div></div>
+
+<div class="panel" id="tab-songs" hidden>
+<h2 id="mysum">My songs</h2>
+<details id="addbox"><summary id="addsum">Add</summary>
+ <div class="form">
+  <label class="l">Link</label>
+  <input id="url" type="url" inputmode="url" placeholder="Paste YouTube or Spotify link">
+  <label class="l">Song name</label>
+  <input id="title" type="text" placeholder="e.g. Jaago Mohan Pyare">
+  <label class="l">Artist</label>
+  <input id="artist" type="text" placeholder="e.g. Pt. Ravi Shankar">
+  <label class="l">Vocal or instrumental</label>
+  <select id="type"><option value="Vocal">Vocal</option><option value="Instrumental">Instrumental</option></select>
+  <div id="instwrap" style="display:none;flex-direction:column;gap:10px">
+   <label class="l">Instrument</label>
+   <select id="inst"></select>
+  </div>
+  <label class="l">Raaga</label>
+  <select id="raga_sel"></select>
+  <input id="raga_other" type="text" placeholder="Type the raaga name" style="display:none">
+  <label class="l">Prahar</label>
+  <select id="prahar"></select>
+  <label class="l">Rating</label>
+  <select id="rating">
+   <option value="5">★★★★★  5 – Love it</option>
+   <option value="4">★★★★  4</option>
+   <option value="3" selected>★★★  3</option>
+   <option value="2">★★  2</option>
+   <option value="1">★  1 – Rarely</option>
+  </select>
+  <button class="add" id="addbtn" type="button">Add song</button>
+  <button class="ghost" id="cancel" type="button" style="display:none">Cancel editing</button>
+  <div class="msg" id="msg"></div>
+ </div>
+</details>
+
+<div id="songs"></div>
+</div>
+<div class="panel" id="tab-raagas" hidden>
+<h2>Raagas by prahar</h2>
+<div id="rows"></div>
+</div>
+<nav id="tabs" aria-label="Sections">
+ <button class="tab on" type="button" data-tab="home"><svg viewBox="0 0 24 24"><path d="M5 21V10a7 7 0 0 1 14 0v11M3 21h18"/></svg><span class="tl">Home</span><span class="td">मुख्य</span></button>
+ <button class="tab" type="button" data-tab="songs"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg><span class="tl">My songs</span><span class="td">मेरे गीत</span></button>
+ <button class="tab" type="button" data-tab="raagas"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="tl">Raagas</span><span class="td">राग</span></button>
+</nav>
+
+<script>
+var PRAHARAS=[
+ {name:"Pratham Prahar · Morning",start:6,ragas:["Bhairav","Ramkali","Bibhas"]},
+ {name:"Dwitiya Prahar · Late morning",start:9,ragas:["Todi","Asavari","Bilaskhani Todi"]},
+ {name:"Tritiya Prahar · Midday",start:12,ragas:["Brindavani Sarang","Bhimpalasi","Madhyamad Sarang"]},
+ {name:"Chaturtha Prahar · Afternoon",start:15,ragas:["Multani","Patdeep","Bhimpalasi"]},
+ {name:"Pancham Prahar · Evening",start:18,ragas:["Yaman","Puriya Dhanashree","Marwa"]},
+ {name:"Shashtha Prahar · Night",start:21,ragas:["Bihag","Kedar","Jaijaiwanti"]},
+ {name:"Saptam Prahar · Midnight",start:0,ragas:["Malkauns","Darbari Kanada","Chandrakauns"]},
+ {name:"Ashtam Prahar · Pre-dawn",start:3,ragas:["Lalit","Bhatiyar","Ahir Bhairav"]}
+];
+var INSTRUMENTS=["Sitar","Sarod","Bansuri (flute)","Santoor","Violin","Shehnai","Veena","Sarangi","Harmonium","Slide guitar","Other"];
+var DEFAULT_RAGAS=PRAHARAS.map(function(p){return p.ragas.slice();});
+var RKEY="raaga_praharas_v1";
+try{var rs0=JSON.parse(localStorage.getItem(RKEY)||"null");if(Array.isArray(rs0)&&rs0.length===PRAHARAS.length){rs0.forEach(function(a,i){if(Array.isArray(a)&&a.length)PRAHARAS[i].ragas=a.filter(function(x){return typeof x==="string"&&x;});});}}catch(e){}
+function saveR(){try{localStorage.setItem(RKEY,JSON.stringify(PRAHARAS.map(function(p){return p.ragas;})));}catch(e){}}
+var RAGAS=[];
+function computeRagas(){RAGAS=[];PRAHARAS.forEach(function(p){p.ragas.forEach(function(r){if(RAGAS.indexOf(r)<0)RAGAS.push(r);});});RAGAS.sort();}
+computeRagas();
+
+var KEY="raaga_songs_v1",FKEY="raaga_filter_v1",songs=[],filter={type:"All",inst:"Any"},editingId=null;
+try{songs=JSON.parse(localStorage.getItem(KEY)||"[]");if(!Array.isArray(songs))songs=[];}catch(e){songs=[];}
+try{var f0=JSON.parse(localStorage.getItem(FKEY)||"null");if(f0&&f0.type)filter=f0;}catch(e){}
+// Migrate older saves (they only had a raaga/title label).
+songs.forEach(function(s){
+  if(s.raga===undefined){s.raga=s.label||"";s.title="";s.artist="";s.type="Vocal";s.instrument="";}
+});
+function save(){try{localStorage.setItem(KEY,JSON.stringify(songs));}catch(e){}}
+function saveF(){try{localStorage.setItem(FKEY,JSON.stringify(filter));}catch(e){}}
+function $(id){return document.getElementById(id);}
+function pad(n){return (n<10?"0":"")+n+":00";}
+function curIdx(){var h=new Date().getHours();for(var i=0;i<PRAHARAS.length;i++){if(h>=PRAHARAS[i].start&&h<PRAHARAS[i].start+3)return i;}return 0;}
+function stars(n){return new Array(n+1).join("★");}
+function opt(sel,v,t,chosen){var o=document.createElement("option");o.value=v;o.textContent=t;if(chosen)o.selected=true;sel.appendChild(o);}
+function matches(s){
+  if(filter.type==="All")return true;
+  if(s.type!==filter.type)return false;
+  return filter.type!=="Instrumental"||filter.inst==="Any"||s.instrument===filter.inst;
+}
+function pick(list){
+  var total=0,i;for(i=0;i<list.length;i++)total+=list[i].rating;
+  var r=Math.random()*total;
+  for(i=0;i<list.length;i++){r-=list[i].rating;if(r<0)return list[i];}
+  return list[list.length-1];
+}
+
+// ----- Filter -----
+function renderFilter(){
+  var chips=document.querySelectorAll(".chip");
+  for(var i=0;i<chips.length;i++){chips[i].className="chip"+(chips[i].getAttribute("data-t")===filter.type?" on":"");}
+  var fi=$("finst");fi.style.display=filter.type==="Instrumental"?"block":"none";
+}
+(function(){
+  var fi=$("finst");opt(fi,"Any","Any instrument",filter.inst==="Any");
+  INSTRUMENTS.forEach(function(n){opt(fi,n,n,filter.inst===n);});
+  fi.onchange=function(){filter.inst=fi.value;saveF();};
+  var chips=document.querySelectorAll(".chip");
+  for(var i=0;i<chips.length;i++){chips[i].onclick=function(){filter.type=this.getAttribute("data-t");if(filter.type!=="Instrumental")filter.inst="Any";fi.value=filter.inst;saveF();renderFilter();};}
+  renderFilter();
+})();
+
+// ----- Raagas by prahar -----
+function rebuildRagaSelect(){
+  var rs=$("raga_sel"),prev=rs.value;rs.innerHTML="";
+  RAGAS.forEach(function(r){opt(rs,r,r,false);});opt(rs,"__other","Other (type name)…",false);
+  if(prev&&(RAGAS.indexOf(prev)>=0||prev==="__other"))rs.value=prev;
+  syncRaga();
+}
+var resetArmed=false,editMode=false;
+function changed(msg){saveR();computeRagas();rebuildRagaSelect();renderRows(msg);}
+function renderRows(msg){
+  var c=curIdx(),rows=$("rows");rows.innerHTML="";
+  var tg=document.createElement("button");tg.type="button";tg.className="tog"+(editMode?" on":"");tg.textContent="Edit";tg.style.margin="10px 0 4px";
+  tg.onclick=function(){editMode=!editMode;resetArmed=false;renderRows();};rows.appendChild(tg);
+  PRAHARAS.forEach(function(p,i){
+    var d=document.createElement("div");d.className="p"+(i===c?" now":"");
+    var b=document.createElement("b");b.textContent=p.name+(i===c?" (now)":"");
+    var t=document.createElement("span");t.textContent=pad(p.start)+"–"+pad((p.start+3)%24);
+    d.appendChild(b);d.appendChild(t);
+    if(!editMode){var ro=document.createElement("span");ro.style.display="block";ro.textContent=p.ragas.join(", ");d.appendChild(ro);rows.appendChild(d);return;}
+    p.ragas.forEach(function(r,k){
+      var row=document.createElement("div");row.className="rr";
+      var n=document.createElement("span");n.className="n";n.textContent=r;
+      var mv=document.createElement("select");opt(mv,"","Move to…",true);
+      PRAHARAS.forEach(function(q,j){if(j!==i)opt(mv,j,q.name.split(" · ")[1]+" ("+pad(q.start)+")",false);});
+      mv.onchange=function(){
+        if(mv.value==="")return;var j=parseInt(mv.value,10);
+        if(p.ragas.length<=1){renderRows("Each prahar needs at least one raaga.");return;}
+        p.ragas.splice(k,1);
+        if(PRAHARAS[j].ragas.indexOf(r)<0)PRAHARAS[j].ragas.push(r);
+        changed("Moved "+r+" to "+PRAHARAS[j].name.split(" · ")[0]+".");
+      };
+      var rm=document.createElement("button");rm.type="button";rm.textContent="Remove";
+      rm.onclick=function(){
+        if(p.ragas.length<=1){renderRows("Each prahar needs at least one raaga.");return;}
+        p.ragas.splice(k,1);changed("Removed "+r+".");
+      };
+      row.appendChild(n);row.appendChild(mv);row.appendChild(rm);d.appendChild(row);
+    });
+    var ad=document.createElement("div");ad.className="ra";
+    var inp=document.createElement("input");inp.type="text";inp.placeholder="Add a raaga here";
+    var ab=document.createElement("button");ab.type="button";ab.textContent="Add";
+    ab.onclick=function(){
+      var v=inp.value.trim();if(!v)return;
+      v=v.charAt(0).toUpperCase()+v.slice(1);
+      var dup=p.ragas.some(function(x){return x.toLowerCase()===v.toLowerCase();});
+      if(dup){renderRows(v+" is already in this prahar.");return;}
+      p.ragas.push(v);changed("Added "+v+".");
+    };
+    ad.appendChild(inp);ad.appendChild(ab);d.appendChild(ad);
+    rows.appendChild(d);
+  });
+  if(!editMode)return;
+  var m=document.createElement("div");m.className="msg";m.textContent=msg||"";m.style.marginTop="10px";rows.appendChild(m);
+  var rb=document.createElement("button");rb.type="button";rb.className="rreset";
+  rb.textContent=resetArmed?"Tap again to confirm reset":"Reset raaga list to defaults";
+  rb.onclick=function(){
+    if(!resetArmed){resetArmed=true;renderRows("This will undo all your changes to the raaga list.");return;}
+    resetArmed=false;PRAHARAS.forEach(function(q,j){q.ragas=DEFAULT_RAGAS[j].slice();});changed("Reset to defaults.");
+  };
+  rows.appendChild(rb);
+}
+
+// ----- Form -----
+function ragaName(){return $("raga_sel").value==="__other"?$("raga_other").value.trim():$("raga_sel").value;}
+function syncType(){$("instwrap").style.display=$("type").value==="Instrumental"?"flex":"none";}
+function syncRaga(){$("raga_other").style.display=$("raga_sel").value==="__other"?"block":"none";}
+function autoPrahar(){
+  var r=$("raga_sel").value;if(r==="__other")return;
+  for(var i=0;i<PRAHARAS.length;i++){if(PRAHARAS[i].ragas.indexOf(r)>=0){$("prahar").value=i;return;}}
+}
+(function(){
+  var ins=$("inst");INSTRUMENTS.forEach(function(n){opt(ins,n,n,false);});
+  var rs=$("raga_sel");rebuildRagaSelect();
+  PRAHARAS.forEach(function(p,i){opt($("prahar"),i,p.name,false);});
+  $("prahar").value=curIdx();
+  $("type").onchange=syncType;
+  rs.onchange=function(){syncRaga();autoPrahar();};
+})();
+function resetForm(){
+  editingId=null;
+  $("url").value="";$("title").value="";$("artist").value="";$("type").value="Vocal";$("inst").selectedIndex=0;
+  $("raga_sel").selectedIndex=0;$("raga_other").value="";$("rating").value="3";
+  syncType();syncRaga();autoPrahar();
+  $("addbtn").textContent="Add song";$("addsum").textContent="Add";$("cancel").style.display="none";
+}
+function startEdit(s){
+  editingId=s.id;
+  $("url").value=s.url;$("title").value=s.title||"";$("artist").value=s.artist||"";
+  $("type").value=s.type||"Vocal";if(s.instrument)$("inst").value=s.instrument;
+  if(RAGAS.indexOf(s.raga)>=0){$("raga_sel").value=s.raga;$("raga_other").value="";}
+  else{$("raga_sel").value="__other";$("raga_other").value=s.raga||"";}
+  $("prahar").value=s.prahar;$("rating").value=s.rating;
+  syncType();syncRaga();
+  $("addbtn").textContent="Save changes";$("addsum").textContent="Edit song";$("cancel").style.display="block";
+  $("msg").textContent="";$("addbox").open=true;
+  $("addbox").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("cancel").onclick=function(){resetForm();$("msg").textContent="";};
+$("addbtn").onclick=function(){
+  var u=$("url").value.trim(),msg=$("msg");
+  try{var x=new URL(u);if(x.protocol!=="http:"&&x.protocol!=="https:")throw 0;}catch(e){msg.textContent="Please paste a valid link starting with https://";return;}
+  var r=ragaName();
+  if(!r){msg.textContent="Please type the raaga name.";return;}
+  var isInst=$("type").value==="Instrumental";
+  var data={url:u,title:$("title").value.trim(),artist:$("artist").value.trim(),type:$("type").value,
+    instrument:isInst?$("inst").value:"",raga:r,prahar:parseInt($("prahar").value,10),rating:parseInt($("rating").value,10)};
+  if(editingId!==null){
+    for(var i=0;i<songs.length;i++){if(songs[i].id===editingId){for(var k in data)songs[i][k]=data[k];}}
+    save();renderSongs();resetForm();msg.textContent="Changes saved.";
+  }else{
+    data.id=Date.now()+Math.random();songs.push(data);
+    save();renderSongs();resetForm();msg.textContent="Added.";
+  }
+};
+
+// ----- My songs -----
+function renderSongs(){
+  var box=$("songs");box.innerHTML="";
+  $("mysum").textContent="My songs ("+songs.length+")";
+  if(!songs.length){var e=document.createElement("div");e.className="msg";e.style.padding="10px 0";e.textContent="No songs yet. Until you add some, Play searches YouTube.";box.appendChild(e);return;}
+  songs.forEach(function(sg){
+    var d=document.createElement("div");d.className="song";
+    var t=document.createElement("div");t.className="t";t.textContent=sg.title||("Raag "+sg.raga)||sg.url;
+    var m=document.createElement("div");m.className="m";
+    var bits=[];if(sg.artist)bits.push(sg.artist);
+    bits.push(sg.type==="Instrumental"&&sg.instrument?"Instrumental · "+sg.instrument:(sg.type||"Vocal"));
+    if(sg.raga)bits.push("Raag "+sg.raga);
+    bits.push(PRAHARAS[sg.prahar].name);
+    m.textContent=bits.join(" · ");
+    var r=document.createElement("div");r.className="r";
+    var sel=document.createElement("select");
+    for(var n=5;n>=1;n--){opt(sel,n,stars(n)+" "+n,n===sg.rating);}
+    sel.onchange=function(){sg.rating=parseInt(sel.value,10);save();};
+    var ed=document.createElement("button");ed.type="button";ed.textContent="Edit";ed.onclick=function(){startEdit(sg);};
+    var del=document.createElement("button");del.type="button";del.textContent="Remove";
+    del.onclick=function(){songs=songs.filter(function(x){return x.id!==sg.id;});if(editingId===sg.id)resetForm();save();renderSongs();};
+    r.appendChild(sel);r.appendChild(ed);r.appendChild(del);
+    d.appendChild(t);d.appendChild(m);d.appendChild(r);box.appendChild(d);
+  });
+}
+
+// ----- Pop-up (stays until you tap; Continue unlocks after a short countdown) -----
+var timer=null;
+function closePop(){if(timer){clearInterval(timer);timer=null;}$("ov").className="ov";}
+function showPop(text,detail,url){
+  if(timer){clearInterval(timer);timer=null;}
+  $("poptext").textContent=text;$("popdetail").textContent=detail||"";
+  var go=$("pgo"),left=4;go.href=url;
+  go.style.pointerEvents="none";go.style.opacity=".5";go.textContent="Opening in "+left+"…";
+  $("ov").className="ov show";
+  timer=setInterval(function(){
+    left--;
+    if(left>0){go.textContent="Opening in "+left+"…";}
+    else{clearInterval(timer);timer=null;go.style.pointerEvents="auto";go.style.opacity="1";
+      go.textContent="Opening…";
+      try{go.click();}catch(e){}
+      setTimeout(function(){go.textContent="Tap here if it didn’t open";},2500);}
+  },1000);
+}
+$("pgo").onclick=function(ev){if(ev.isTrusted)setTimeout(closePop,1500);};
+$("pno").onclick=closePop;
+
+// ----- Play -----
+var playBtn=$("play");
+playBtn.onclick=function(ev){
+  ev.preventDefault();
+  try{
+    var i=curIdx(),p=PRAHARAS[i],info=$("info");info.innerHTML="";
+    var mine=songs.filter(function(s){return s.prahar===i&&matches(s);});
+    var explore=!mine.length||Math.random()<0.2;
+    var url,title,sub,pop,detail="";
+    if(!explore){
+      var s=pick(mine);url=s.url;
+      pop="Playing a saved song from raaga "+(s.raga||p.name.split(" · ")[0]);
+      title=s.title||("Raag "+s.raga);
+      detail=[s.title,s.artist].filter(Boolean).join(" — ");
+      sub=p.name+" · "+stars(s.rating);
+    }else{
+      var raga=p.ragas[Math.floor(Math.random()*p.ragas.length)];
+      var extra=filter.type==="Vocal"?"vocal khayal":(filter.type==="Instrumental"?(filter.inst!=="Any"?filter.inst.replace(/ \(.*\)/,"")+" instrumental":"instrumental"):"Hindustani classical");
+      url="https://www.youtube.com/results?search_query="+encodeURIComponent("Raag "+raga+" "+extra+" full")+"&sp=CAM%253D";
+      title="Raag "+raga;pop="Playing a new song from raaga "+raga;
+      sub=p.name+(mine.length?" · something new":" · no matching saved songs");
+      if(filter.type!=="All")detail="Filter: "+filter.type+(filter.type==="Instrumental"&&filter.inst!=="Any"?" · "+filter.inst:"");
+    }
+    var h=document.createElement("p");h.id="raga";h.textContent=title;
+    var s2=document.createElement("p");s2.id="sub";s2.textContent=sub;
+    var a=document.createElement("a");a.id="open";a.href=url;a.target="_blank";a.rel="noopener";a.textContent="Open link";
+    info.appendChild(h);info.appendChild(s2);info.appendChild(a);
+    showPop(pop,detail,url);
+  }catch(e){}
+};
+
+var DEVA=["प्रथम प्रहर","द्वितीय प्रहर","तृतीय प्रहर","चतुर्थ प्रहर","पंचम प्रहर","षष्ठ प्रहर","सप्तम प्रहर","अष्टम प्रहर"];
+var SUN='<svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="6"/><path d="M17 3v4M17 27v4M3 17h4M27 17h4M7 7l3 3M24 24l3 3M27 7l-3 3M10 24l-3 3"/></svg>';
+var HORIZON='<svg viewBox="0 0 34 34"><path d="M8 22a9 9 0 0 1 18 0M3 22h28M17 6v4M7 11l3 3M27 11l-3 3"/></svg>';
+var MOON='<svg viewBox="0 0 34 34"><path d="M25 22A11 11 0 0 1 12 6a11 11 0 1 0 13 16z"/></svg>';
+var ICONS=[SUN,SUN,SUN,SUN,HORIZON,MOON,MOON,HORIZON],shownP=-1;
+function applyTheme(){
+  var i=curIdx();if(i===shownP)return;shownP=i;
+  var p=PRAHARAS[i],parts=p.name.split(" · ");
+  document.documentElement.setAttribute("data-p",i);
+  $("pico").innerHTML=ICONS[i];
+  $("pdeva").textContent=DEVA[i];
+  $("pen").textContent=parts[0];
+  $("ptime").textContent=parts[1]+", "+pad(p.start)+"–"+pad((p.start+3)%24);
+}
+applyTheme();
+setInterval(function(){var o=shownP;applyTheme();if(o!==shownP&&!editMode)renderRows();},60000);
+var TABS=["home","songs","raagas"];
+function showTab(t){
+  TABS.forEach(function(n){$("tab-"+n).hidden=(n!==t);});
+  var bs=document.querySelectorAll(".tab");
+  for(var i=0;i<bs.length;i++){bs[i].className="tab"+(bs[i].getAttribute("data-tab")===t?" on":"");}
+  window.scrollTo(0,0);
+}
+(function(){var bs=document.querySelectorAll(".tab");for(var i=0;i<bs.length;i++){bs[i].onclick=function(){showTab(this.getAttribute("data-tab"));};}})();
+renderRows();renderSongs();resetForm();
+</script>
+</body>
+</html>
