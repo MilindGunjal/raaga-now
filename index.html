@@ -338,15 +338,19 @@ $("addbtn").onclick=function(){
   try{var x=new URL(u);if(x.protocol!=="http:"&&x.protocol!=="https:")throw 0;}catch(e){msg.textContent="Please paste a valid link starting with https://";return;}
   var r=ragaName();
   if(!r){msg.textContent="Please type the raaga name.";return;}
+  var note="",pr=parseInt($("prahar").value,10),known=null;
+  RAGAS.forEach(function(x){if(x.toLowerCase()===r.toLowerCase())known=x;});
+  if(known){r=known;}
+  else{r=r.charAt(0).toUpperCase()+r.slice(1);PRAHARAS[pr].ragas.push(r);changed();note=" Raag "+r+" was added to the raaga list under "+PRAHARAS[pr].name.split(" · ")[0]+".";}
   var isInst=$("type").value==="Instrumental";
   var data={url:u,title:$("title").value.trim(),artist:$("artist").value.trim(),type:$("type").value,
     instrument:isInst?$("inst").value:"",raga:r,prahar:parseInt($("prahar").value,10),rating:parseInt($("rating").value,10)};
   if(editingId!==null){
     for(var i=0;i<songs.length;i++){if(songs[i].id===editingId){for(var k in data)songs[i][k]=data[k];}}
-    save();renderSongs();resetForm();msg.textContent="Changes saved.";
+    save();renderSongs();resetForm();msg.textContent="Changes saved."+note;
   }else{
     data.id=Date.now()+Math.random();songs.push(data);
-    save();renderSongs();resetForm();msg.textContent="Added.";
+    save();renderSongs();resetForm();msg.textContent="Added."+note;
   }
 };
 
